@@ -33,14 +33,8 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ECS.cpp">
-      <Filter>ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Components.cpp">
-      <Filter>ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="SpriteComponent.cpp">
-      <Filter>ECS</Filter>
+    <ClCompile Include="Vector2d.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +59,16 @@
     <ClInclude Include="SpriteComponent.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="PositionComponent.h">
+    <ClInclude Include="TransformComponent.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardController.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
       <Filter>ECS</Filter>
     </ClInclude>
   </ItemGroup>

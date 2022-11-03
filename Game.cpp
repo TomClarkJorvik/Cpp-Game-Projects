@@ -2,10 +2,12 @@
 #include "Map.h"
 #include "ECS.h"
 #include "Components.h"
+#include "Vector2d.h"
 
 Map* map;
 
 SDL_Renderer* Game::renderer = nullptr;
+SDL_Event Game::event;
 
 Manager manager;
 auto& player(manager.addEntity());
@@ -45,14 +47,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	map = new Map();
 
-	player.addComponent<PositionComponent>(400,400);
+	player.addComponent<TransformComponent>();
 	player.addComponent<SpriteComponent>("assets/player.png");
+	player.addComponent<KeyboardController>();
 
 }
 
 void Game::handleEvents()
 {
-	SDL_Event event;
+
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
@@ -66,6 +69,7 @@ void Game::update()
 {
 	manager.update();
 	manager.refresh();
+
 }
 void Game::render()
 {
