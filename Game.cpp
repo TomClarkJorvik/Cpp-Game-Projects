@@ -1,25 +1,22 @@
 #include "Game.h"
-#include "Map.h"
-#include "ECS.h"
-#include "Components.h"
-#include "Vector2d.h"
+#include "GameState.h"
+#include <iostream>
 
-Map* map;
+
+GameState* gameState;
+
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
-Manager manager;
-auto& player(manager.addEntity());
 
 Game::Game()
 {}
 Game::~Game()
 {}
-
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
-	int flags =0;
+	int flags = 0;
 	if (fullscreen) {
 		flags = SDL_WINDOW_FULLSCREEN;
 	}
@@ -43,16 +40,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else {
 		isRunning = false;
 	}
+	gameState = new GameState();
 
-
-	map = new Map();
-
-	player.addComponent<TransformComponent>();
-	player.addComponent<SpriteComponent>("assets/player.png");
-	player.addComponent<KeyboardController>();
 
 }
-
+// todo : keybuffering
 void Game::handleEvents()
 {
 
@@ -61,22 +53,35 @@ void Game::handleEvents()
 	case SDL_QUIT:
 		isRunning = false;
 		break;
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym) {
+		case SDLK_a:
+			gameState->TakeAction('a');
+			std::cout << "a\n";
+			break;
+		case SDLK_d:
+			gameState->TakeAction('d');
+			std::cout << "d\n";
+			break;
+		}
 	default:
 		break;
 	}
 }
+
 void Game::update()
 {
-	manager.update();
-	manager.refresh();
 
+	if (gameState->Update()) {
+		isRunning = false;
+	}
+	
 }
 void Game::render()
 {
 	SDL_RenderClear(renderer);
-	
-	map->DrawMap();
-	manager.draw();
+
+	gameState->Draw();
 
 	SDL_RenderPresent(renderer);
 }
