@@ -43,9 +43,9 @@ void GameState::TakeAction(char action) {
 
 	switch (action) {
 	// move block left
-	case 'a':
+	case 'l':
 		for (int i = 0; i < 4; i++) {
-			if (state[currentBlock[i][1]][currentBlock[i][0]-1] != 0 || currentBlock[i][1] == 0) {
+			if (state[currentBlock[i][1]][currentBlock[i][0]-1] != 0 || currentBlock[i][0] == 0) {
 				canMove = false;
 			}
 		}
@@ -54,9 +54,10 @@ void GameState::TakeAction(char action) {
 				currentBlock[i][0] -= 1;
 			}
 		}
-	case 'd':
+		break;
+	case 'r':
 		for (int i = 0; i < 4; i++) {
-			if (state[currentBlock[i][1]][currentBlock[i][0] + 1] != 0 || currentBlock[i][1] == 9) {
+			if (state[currentBlock[i][1]][currentBlock[i][0] + 1] != 0 || currentBlock[i][0] == 9) {
 				canMove = false;
 			}
 		}
@@ -65,6 +66,7 @@ void GameState::TakeAction(char action) {
 				currentBlock[i][0] += 1;
 			}
 		}
+		break;
 
 	}
 
@@ -92,7 +94,6 @@ bool GameState::Update() {
 		for (int i = 0; i < 4; i++) {
 			state[currentBlock[i][1]][currentBlock[i][0]] = currentBlockColour;
 		}
-		// todo : check for rows.
 
 
 
@@ -100,6 +101,31 @@ bool GameState::Update() {
 			return true;
 		}
 	}
+	bool rowMade;
+	for (int i = 0; i < rows; i++) {
+		rowMade = true;
+		for (int j = 0; j < rows; j++) {
+			if (state[i][j] == 0) {
+				rowMade = false;
+				break;
+			}
+		}
+		if (rowMade) {
+			// move all rows above down by one, make top row empty.
+			if (i != 0) {
+				for (int row = i; row > 1; row--) {
+					for (int col = 0; col < cols; col++) {
+						state[row][col] = state[row - 1][col];
+					}
+				}
+			}
+			for (int col = 0; col < cols; col++) {
+				state[0][col] = 0;
+			}
+			score++;
+		}
+	}
+
 	return false;
 }
 
@@ -194,85 +220,84 @@ bool GameState::AddNewBlock() {
 	currentBlockColour = distr(gen);
 	switch (currentBlockColour) {
 
-	// todo : move to centre of screen
 	case 1: // yellow square
-		currentBlock[0][0] = 0;
+		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 0;
+		currentBlock[1][0] = 4;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 1;
+		currentBlock[2][0] = 5;
 		currentBlock[2][1] = 0;
-		currentBlock[3][0] = 1;
+		currentBlock[3][0] = 5;
 		currentBlock[3][1] = 1; 
 		break;
 	case 2:// red --__
-		currentBlock[0][0] = 0;
+		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 0;
+		currentBlock[1][0] = 4;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 1;
+		currentBlock[2][0] = 5;
 		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 1;
+		currentBlock[3][0] = 5;
 		currentBlock[3][1] = 2;
 		break;
 	case 3: // orange __|
-		currentBlock[0][0] = 1;
+		currentBlock[0][0] = 5;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 1;
+		currentBlock[1][0] = 5;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 1;
+		currentBlock[2][0] = 5;
 		currentBlock[2][1] = 2;
-		currentBlock[3][0] = 0;
+		currentBlock[3][0] = 4;
 		currentBlock[3][1] = 2;
 		break;
 	case 4:// green _|-
-		currentBlock[0][0] = 1;
+		currentBlock[0][0] = 5;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 1;
+		currentBlock[1][0] = 5;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 0;
+		currentBlock[2][0] = 4;
 		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 0;
+		currentBlock[3][0] = 4;
 		currentBlock[3][1] = 2;
 		break;
 	case 5: // blue ____
-		currentBlock[0][0] = 0;
+		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 0;
+		currentBlock[1][0] = 4;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 0;
+		currentBlock[2][0] = 4;
 		currentBlock[2][1] = 2;
-		currentBlock[3][0] = 0;
+		currentBlock[3][0] = 4;
 		currentBlock[3][1] = 3;
 		break;
 	case 6: // pink _|_
-		currentBlock[0][0] = 1;
+		currentBlock[0][0] = 5;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 1;
+		currentBlock[1][0] = 5;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 0;
+		currentBlock[2][0] = 4;
 		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 1;
+		currentBlock[3][0] = 5;
 		currentBlock[3][1] = 2;
 		break;
 	case 7:// dark blue |__
-		currentBlock[0][0] = 0;
+		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 1;
+		currentBlock[1][0] = 5;
 		currentBlock[1][1] = 0;
-		currentBlock[2][0] = 1;
+		currentBlock[2][0] = 5;
 		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 1;
+		currentBlock[3][0] = 5;
 		currentBlock[3][1] = 2; 
 		break;
 	case 8:// purple -|_
-		currentBlock[0][0] = 0;
+		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 0;
+		currentBlock[1][0] = 4;
 		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 1;
+		currentBlock[2][0] = 5;
 		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 1;
+		currentBlock[3][0] = 5;
 		currentBlock[3][1] = 2;
 		break;
 	}

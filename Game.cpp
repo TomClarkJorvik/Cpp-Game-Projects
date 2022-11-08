@@ -5,7 +5,6 @@
 
 GameState* gameState;
 
-
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 
@@ -44,26 +43,24 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
 }
-// todo : keybuffering
 void Game::handleEvents()
 {
 
+	const Uint8* keystates = SDL_GetKeyboardState(NULL);
 	SDL_PollEvent(&event);
 	switch (event.type) {
 	case SDL_QUIT:
 		isRunning = false;
 		break;
 	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym) {
-		case SDLK_a:
-			gameState->TakeAction('a');
-			std::cout << "a\n";
-			break;
-		case SDLK_d:
-			gameState->TakeAction('d');
-			std::cout << "d\n";
-			break;
+		if (keystates[SDL_SCANCODE_LEFT]){
+			gameState->TakeAction('l');
+
 		}
+		else if (keystates[SDL_SCANCODE_RIGHT])
+			gameState->TakeAction('r');
+
+
 	default:
 		break;
 	}

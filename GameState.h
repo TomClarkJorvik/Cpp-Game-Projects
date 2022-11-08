@@ -22,6 +22,8 @@ public:
 	int rows = 20;
 	int cols = 10;
 
+	int score = 0;
+
 private:
 
 	SDL_Rect src, dest;
