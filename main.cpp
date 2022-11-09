@@ -15,6 +15,8 @@ int main(int argc, char* argv[]) {
 
 	game->init("BoiEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 396, 726, false);
 
+	game->mainMenu();
+
 	while (game->running()) {
 		frameStart = SDL_GetTicks();
 

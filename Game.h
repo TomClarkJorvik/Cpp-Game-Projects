@@ -10,10 +10,13 @@ public:
 	~Game();
 
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	void mainMenu();
+	void showScoreScreen();
 	void handleEvents();
 	void update();
 	void render();
 	void clean();
+	
 
 	bool running() {
 		return isRunning;

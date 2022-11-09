@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameState.h"
+#include "MainMenu.h"
 #include <iostream>
 
 
@@ -43,6 +44,43 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
 }
+
+void Game::mainMenu() {
+	bool inMainMenu = true;
+	MainMenu menu = MainMenu(renderer);
+
+	while (inMainMenu) {
+
+		SDL_PollEvent(&event);
+		switch (event.type) {
+		case SDL_QUIT:
+			inMainMenu = false;
+			isRunning = false;
+			break;
+
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_LEFT &&
+				event.button.x >= menu.buttonDestRect.x &&
+				event.button.x <= (menu.buttonDestRect.x + menu.buttonDestRect.w) &&
+				event.button.y >= menu.buttonDestRect.y &&
+				event.button.y <= (menu.buttonDestRect.y + menu.buttonDestRect.h)) {
+
+				inMainMenu = false;
+			}
+			break;
+		}
+		menu.Draw();
+	}
+
+
+}
+
+void Game::showScoreScreen() {
+	isRunning = false;
+}
+
+
+
 void Game::handleEvents()
 {
 
@@ -70,7 +108,7 @@ void Game::update()
 {
 
 	if (gameState->Update()) {
-		isRunning = false;
+		showScoreScreen();
 	}
 	
 }

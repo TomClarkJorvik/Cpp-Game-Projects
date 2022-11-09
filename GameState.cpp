@@ -35,6 +35,7 @@ GameState::~GameState() {
 	SDL_DestroyTexture(pink);
 	SDL_DestroyTexture(darkblue);
 	SDL_DestroyTexture(purple);
+	SDL_DestroyTexture(background);
 }
 
 // a or d to move left or right
@@ -104,7 +105,7 @@ bool GameState::Update() {
 	bool rowMade;
 	for (int i = 0; i < rows; i++) {
 		rowMade = true;
-		for (int j = 0; j < rows; j++) {
+		for (int j = 0; j < cols; j++) {
 			if (state[i][j] == 0) {
 				rowMade = false;
 				break;
@@ -233,64 +234,65 @@ bool GameState::AddNewBlock() {
 	case 2:// red --__
 		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 4;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 5;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 5;
-		currentBlock[3][1] = 2;
-		break;
-	case 3: // orange __|
-		currentBlock[0][0] = 5;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 5;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 5;
-		currentBlock[2][1] = 2;
-		currentBlock[3][0] = 4;
-		currentBlock[3][1] = 2;
-		break;
-	case 4:// green _|-
-		currentBlock[0][0] = 5;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 5;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 4;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 4;
-		currentBlock[3][1] = 2;
-		break;
-	case 5: // blue ____
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 4;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 4;
-		currentBlock[2][1] = 2;
-		currentBlock[3][0] = 4;
-		currentBlock[3][1] = 3;
-		break;
-	case 6: // pink _|_
-		currentBlock[0][0] = 5;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 5;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 4;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 5;
-		currentBlock[3][1] = 2;
-		break;
-	case 7:// dark blue |__
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
 		currentBlock[1][0] = 5;
 		currentBlock[1][1] = 0;
 		currentBlock[2][0] = 5;
 		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 5;
-		currentBlock[3][1] = 2; 
+		currentBlock[3][0] = 6;
+		currentBlock[3][1] = 1;
 		break;
-	case 8:// purple -|_
+	case 3: // orange __|
+		currentBlock[0][0] = 5;
+		currentBlock[0][1] = 1;
+		currentBlock[1][0] = 6;
+		currentBlock[1][1] = 1;
+		currentBlock[2][0] = 7;
+		currentBlock[2][1] = 1;
+		currentBlock[3][0] = 7;
+		currentBlock[3][1] = 0;
+		break;
+	case 4:// green _|-
+		currentBlock[0][0] = 5;
+		currentBlock[0][1] = 1;
+		currentBlock[1][0] = 6;
+		currentBlock[1][1] = 1;
+		currentBlock[2][0] = 6;
+		currentBlock[2][1] = 0;
+		currentBlock[3][0] = 7;
+		currentBlock[3][1] = 0;
+		break;
+	case 5: // blue ____
+		currentBlock[0][0] = 4;
+		currentBlock[0][1] = 0;
+		currentBlock[1][0] = 5;
+		currentBlock[1][1] = 0;
+		currentBlock[2][0] = 6;
+		currentBlock[2][1] = 0;
+		currentBlock[3][0] = 7;
+		currentBlock[3][1] = 0;
+		break;
+	case 6: // pink _|_
+		currentBlock[0][0] = 5;
+		currentBlock[0][1] = 1;
+		currentBlock[1][0] = 6;
+		currentBlock[1][1] = 1;
+		currentBlock[2][0] = 6;
+		currentBlock[2][1] = 0;
+		currentBlock[3][0] = 7;
+		currentBlock[3][1] = 1;
+		break;
+	case 7:// dark blue |__
+		currentBlock[0][0] = 4;
+		currentBlock[0][1] = 0;
+		currentBlock[1][0] = 4;
+		currentBlock[1][1] = 1;
+		currentBlock[2][0] = 5;
+		currentBlock[2][1] = 1;
+		currentBlock[3][0] = 6;
+		currentBlock[3][1] = 1; 
+		break;
+	case 8:// purple |_
+		   //          |
 		currentBlock[0][0] = 4;
 		currentBlock[0][1] = 0;
 		currentBlock[1][0] = 4;
