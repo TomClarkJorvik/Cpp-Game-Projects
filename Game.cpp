@@ -91,14 +91,17 @@ void Game::handleEvents()
 		isRunning = false;
 		break;
 	case SDL_KEYDOWN:
-		if (keystates[SDL_SCANCODE_LEFT]){
+		if (keystates[SDL_SCANCODE_LEFT]) {
 			gameState->TakeAction('l');
 
 		}
 		else if (keystates[SDL_SCANCODE_RIGHT])
 			gameState->TakeAction('r');
-
-
+		else if (keystates[SDL_SCANCODE_UP])
+			gameState->TakeAction('e');
+		else if (keystates[SDL_SCANCODE_DOWN])
+			gameState->TakeAction('q');
+		break;
 	default:
 		break;
 	}

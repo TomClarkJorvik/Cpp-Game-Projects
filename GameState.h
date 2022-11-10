@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "TextureManager.h"
 #include <random>
+#include "Block.h"
 
 const int mapHeight = 20;
 const int mapWidth = 10;
@@ -41,8 +42,8 @@ private:
 	SDL_Texture* background;
 
 
-	int currentBlock[4][2];
-	int currentBlockColour;
+	Block* currentBlock;
+
 	int state[20][10] = {
 {0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0},

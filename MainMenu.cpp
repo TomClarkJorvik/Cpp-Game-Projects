@@ -39,7 +39,3 @@ void MainMenu::Draw()
 
 }
 
-void MainMenu::Button()
-{
-
-}

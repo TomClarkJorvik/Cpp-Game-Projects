@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include <iostream>
 
 GameState::GameState() {
 	firstStatePtr = *state;
@@ -46,28 +47,86 @@ void GameState::TakeAction(char action) {
 	// move block left
 	case 'l':
 		for (int i = 0; i < 4; i++) {
-			if (state[currentBlock[i][1]][currentBlock[i][0]-1] != 0 || currentBlock[i][0] == 0) {
+			if (state[currentBlock->coords[i][1]][currentBlock->coords[i][0]-1] != 0 || currentBlock->coords[i][0] == 0) {
 				canMove = false;
 			}
 		}
 		if (canMove) {
+			currentBlock->pivotPoint[0] -= 1;
 			for (int i = 0; i < 4; i++) {
-				currentBlock[i][0] -= 1;
+				currentBlock->coords[i][0] -= 1;
 			}
 		}
 		break;
 	case 'r':
 		for (int i = 0; i < 4; i++) {
-			if (state[currentBlock[i][1]][currentBlock[i][0] + 1] != 0 || currentBlock[i][0] == 9) {
+			if (state[currentBlock->coords[i][1]][currentBlock->coords[i][0] + 1] != 0 || currentBlock->coords[i][0] == (cols - 1)) {
 				canMove = false;
 			}
 		}
 		if (canMove) {
+			currentBlock->pivotPoint[0] += 1;
 			for (int i = 0; i < 4; i++) {
-				currentBlock[i][0] += 1;
+				currentBlock->coords[i][0] += 1;
 			}
 		}
 		break;
+	case 'e':
+		// clockwise rotation
+		if (currentBlock->blockColour != 1) {
+			bool canRotate = true;
+			int targetXs[4] = { 0,0,0,0 };
+			int targetYs[4] = { 0,0,0,0 };
+			for (int i = 0; i < 4; i++) {
+				// x
+				targetXs[i] = currentBlock->pivotPoint[0] + currentBlock->pivotPoint[1] - currentBlock->coords[i][1];
+				// y
+				targetYs[i] = currentBlock->pivotPoint[1] - currentBlock->pivotPoint[0] + currentBlock->coords[i][0];
+
+				if (state[targetYs[i]][targetXs[i]] != 0 || targetXs[i] <0 || targetYs[i] < 0 || targetXs[i] > (cols -1) || targetYs[i] > (rows-1)) {
+					canRotate = false;
+				}
+			}
+			if (canRotate) {
+				for (int i = 0; i < 4; i++) {
+					// x
+					currentBlock->coords[i][0] = targetXs[i];
+					// y
+					currentBlock->coords[i][1] = targetYs[i];
+				}
+			}
+		}
+
+		break;
+
+	case 'q':
+		// counter clockwise rotation
+		if (currentBlock->blockColour != 1) {
+			bool canRotate = true;
+			int targetXs[4] = { 0,0,0,0 };
+			int targetYs[4] = { 0,0,0,0 };
+			for (int i = 0; i < 4; i++) {
+				// x
+				targetXs[i] = currentBlock->pivotPoint[0] - currentBlock->pivotPoint[1] + currentBlock->coords[i][1];
+				// y
+				targetYs[i] = currentBlock->pivotPoint[1] + currentBlock->pivotPoint[0] - currentBlock->coords[i][0];
+
+				if (state[targetYs[i]][targetXs[i]] != 0 || targetXs[i] <0 || targetYs[i] < 0 || targetXs[i] > (cols - 1) || targetYs[i] > (rows - 1)) {
+					canRotate = false;
+				}
+			}
+			if (canRotate) {
+				for (int i = 0; i < 4; i++) {
+					// x
+					currentBlock->coords[i][0] = targetXs[i];
+					// y
+					currentBlock->coords[i][1] = targetYs[i];
+				}
+			}
+		}
+
+		break;
+
 
 	}
 
@@ -82,18 +141,19 @@ bool GameState::Update() {
 	bool canMove = true;
 	// moves the current block down by 1 row. If there is a block underneath it, then it stops.
 	for (int i = 0; i < 4; i++) {
-		if (state[currentBlock[i][1]+1][currentBlock[i][0]] != 0 || currentBlock[i][1]==19) {
+		if (state[currentBlock->coords[i][1]+1][currentBlock->coords[i][0]] != 0 || currentBlock->coords[i][1]== (rows - 1)) {
 			canMove = false;
 		}
 	}
 	if (canMove) {
+		currentBlock->pivotPoint[1] += 1;
 		for (int i = 0; i < 4; i++) {
-			currentBlock[i][1] += 1;
+			currentBlock->coords[i][1] += 1;
 		}
 	}
 	else {
 		for (int i = 0; i < 4; i++) {
-			state[currentBlock[i][1]][currentBlock[i][0]] = currentBlockColour;
+			state[currentBlock->coords[i][1]][currentBlock->coords[i][0]] = currentBlock->blockColour;
 		}
 
 
@@ -177,9 +237,9 @@ void GameState::Draw() {
 		}
 	}
 	for (int i = 0; i < 4; i++) {
-		dest.x = currentBlock[i][0] * 33 + 33;
-		dest.y = currentBlock[i][1] * 33 + 33;
-		switch (currentBlockColour) {
+		dest.x = currentBlock->coords[i][0] * 33 + 33;
+		dest.y = currentBlock->coords[i][1] * 33 + 33;
+		switch (currentBlock->blockColour) {
 		case 0:
 			break;
 		case 1:
@@ -218,94 +278,12 @@ bool GameState::AddNewBlock() {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> distr(1, 8);
-	currentBlockColour = distr(gen);
-	switch (currentBlockColour) {
+	currentBlock->~Block();
+	currentBlock = new Block(distr(gen),*state);
 
-	case 1: // yellow square
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 4;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 5;
-		currentBlock[2][1] = 0;
-		currentBlock[3][0] = 5;
-		currentBlock[3][1] = 1; 
-		break;
-	case 2:// red --__
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 5;
-		currentBlock[1][1] = 0;
-		currentBlock[2][0] = 5;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 6;
-		currentBlock[3][1] = 1;
-		break;
-	case 3: // orange __|
-		currentBlock[0][0] = 5;
-		currentBlock[0][1] = 1;
-		currentBlock[1][0] = 6;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 7;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 7;
-		currentBlock[3][1] = 0;
-		break;
-	case 4:// green _|-
-		currentBlock[0][0] = 5;
-		currentBlock[0][1] = 1;
-		currentBlock[1][0] = 6;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 6;
-		currentBlock[2][1] = 0;
-		currentBlock[3][0] = 7;
-		currentBlock[3][1] = 0;
-		break;
-	case 5: // blue ____
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 5;
-		currentBlock[1][1] = 0;
-		currentBlock[2][0] = 6;
-		currentBlock[2][1] = 0;
-		currentBlock[3][0] = 7;
-		currentBlock[3][1] = 0;
-		break;
-	case 6: // pink _|_
-		currentBlock[0][0] = 5;
-		currentBlock[0][1] = 1;
-		currentBlock[1][0] = 6;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 6;
-		currentBlock[2][1] = 0;
-		currentBlock[3][0] = 7;
-		currentBlock[3][1] = 1;
-		break;
-	case 7:// dark blue |__
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 4;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 5;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 6;
-		currentBlock[3][1] = 1; 
-		break;
-	case 8:// purple |_
-		   //          |
-		currentBlock[0][0] = 4;
-		currentBlock[0][1] = 0;
-		currentBlock[1][0] = 4;
-		currentBlock[1][1] = 1;
-		currentBlock[2][0] = 5;
-		currentBlock[2][1] = 1;
-		currentBlock[3][0] = 5;
-		currentBlock[3][1] = 2;
-		break;
-	}
 
 	for (int i = 0; i < 4; i++) {
-		if (state[currentBlock[i][1]][currentBlock[i][0]] != 0) {
+		if (state[currentBlock->coords[i][1]][currentBlock->coords[i][0]] != 0) {
 			return true;
 		}
 	}

@@ -10,7 +10,6 @@ public:
 	MainMenu(SDL_Renderer* r);
 	~MainMenu();
 	void Draw();
-	void Button();
 
 	SDL_Rect buttonSrcRect, buttonDestRect;
 
