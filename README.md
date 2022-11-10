@@ -3,7 +3,8 @@
 Tetris in C++ with SDL2
 
 todo:
-  Block rotation.
+  Allow more frames to rotate and move before the block drops a square.
+  Increase difficulty over time.
   Score tracker
   End game screen
 
